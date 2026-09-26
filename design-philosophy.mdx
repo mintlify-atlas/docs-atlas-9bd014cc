@@ -1,0 +1,71 @@
+---
+title: "Design Philosophy and Mechanical Architecture"
+sidebarTitle: "Design Philosophy"
+description: "Why Robotic Arm Macondo uses a 4-bar linkage mechanism and spur gear claw, and the engineering tradeoffs that shaped the design."
+---
+
+Robotic Arm Macondo was designed around a deliberate engineering challenge: the project specifications called for an arm built with multiple 2-bar stages — a configuration that raises the mechanical complexity well above a simple single-pivot arm and makes it an exceptional learning platform. As the project README states directly, the design was chosen because "the specifications required to make an arm with this amount of 2-bars would make for a great challenge and learning opportunity." Every major mechanical decision — the 4-bar linkage at the top of the arm, the spur-gear claw, the layered structural mounts — flows from that founding principle: maximise the educational value of each subsystem while keeping the build achievable with a consumer FDM printer and off-the-shelf servo hardware.
+
+## The 4-Bar Linkage
+
+A 4-bar linkage is a closed kinematic chain made of four rigid links joined at four revolute (pin) joints. In a robotic arm context, this arrangement is used because it constrains end-effector orientation independently of joint angle — meaning the claw can remain level (or follow a predictable path) even as the proximal links sweep through a wide arc. This is a significant advantage over a simple open-chain 2-bar arm, where the end-effector tilts with every joint rotation and compensation requires additional degrees of freedom or complex firmware math.
+
+In Robotic Arm Macondo, the 4-bar linkage is implemented in the upper arm assembly using three printed parts:
+
+- **Top 4 Bar Servo Arm** — the driven link, directly coupled to the servo output horn. This is the "crank" of the mechanism.
+- **Top Free Arm** — the coupler link, which translates rotational motion from the servo arm into a controlled sweep of the upper arm segment.
+- **Servo Arm** — the rocker or follower link that closes the four-bar loop, ensuring geometric consistency throughout the range of motion.
+
+Together these three parts define the motion envelope of the arm's upper stage and keep the claw mount oriented predictably regardless of servo position. The 4-bar topology also distributes load across two links rather than cantilevering everything off a single pivot, improving rigidity without adding weight.
+
+## Claw Mechanism
+
+The claw uses a spur-gear drive rather than a direct servo-to-finger linkage. A single servo rotates the **Spur Gear**, which meshes simultaneously with the **Claw Gear Left** and **Claw Gear Right** — two mirror-image gears mounted on the **Claw Mount**. Because both claw gears are driven from the same spur gear, the two fingers open and close symmetrically in a single motion with one servo command.
+
+Gears were chosen over a direct linkage for several reasons:
+
+- **Symmetry** — a single driving gear produces equal and opposite rotation on both fingers automatically, without the need for a symmetric linkage or two separate servos.
+- **Mechanical advantage** — gear ratio can be tuned during the design phase by changing tooth counts, allowing the designer to trade speed for torque without any firmware changes.
+- **Compactness** — a meshing gear train fits within the small volume of a printed claw mount more cleanly than a multi-link bar mechanism would.
+- **Print-friendly geometry** — spur gears with straight teeth are among the easiest gear forms to print accurately on FDM hardware, making them a natural choice for an open-source printed arm.
+
+The **Claw Mount** serves as the structural backbone of the end-effector: it houses the gear axles, provides the bearing surfaces that keep the gears properly meshed under load, and attaches to the top of the arm chain.
+
+## Structural Layout
+
+The arm follows a kinematic chain of six distinct structural zones, each handled by one or more dedicated printed parts:
+
+| Zone | Parts | Function |
+|---|---|---|
+| **Base** | Master - Base | Anchors the entire assembly to a surface; houses the rotation servo for full-arm azimuth sweep |
+| **Shoulder mounts** | Master - Left Mount, Master - Right Mount | Bilateral support brackets that carry the lower arm pivot bearings and keep the arm laterally constrained |
+| **Lower arm** | Master - Bearing Arm | The primary lower arm segment, spanning from the shoulder pivot down to the elbow joint; uses bearings to minimise friction under servo load |
+| **Elbow / mid arm** | Master - Third Arm | The intermediate link connecting the bearing arm to the upper 4-bar assembly |
+| **Upper arm (4-bar)** | Master - Top 4 Bar Servo Arm, Master - Top Free Arm, Master - Servo Arm, Master - Top Mount | The 4-bar linkage stage that controls upper-arm sweep and carries the claw subassembly |
+| **End-effector** | Master - Claw Mount, Master - Claw Gear Left, Master - Claw Gear Right, Master - Spur Gear | The spur-gear claw for gripping objects |
+
+Reading the chain from ground to tip: the **Base** provides azimuth rotation → the **Left and Right Mounts** form a stable shoulder cradle → the **Bearing Arm** extends to the elbow → the **Third Arm** bridges to the upper assembly → the **4-bar upper arm** (Top Mount, Servo Arm, Top 4 Bar Servo Arm, Top Free Arm) sweeps the end-effector through its working arc → the **Claw Mount and gear set** performs the final grip action.
+
+## Electronics Integration
+
+The Arduino UNO R4 sits at the centre of the electronics architecture, with a custom shield PCB that exposes all its I/O in a form optimised for servo wiring. The shield schematic (KiCad project `uno-r4-shield-template`, rev 1A) defines the following integration points:
+
+**Power architecture** — battery voltage (`+BATT`) feeds a 7.5 V rail (`+7.5V`), which is regulated down to `+5V` for servo logic and the Arduino itself, and further to `+3.3V` / `+3V3` for low-voltage peripherals. Servo motors draw from the `+5V` rail via the shield's servo header bank.
+
+**Servo connections** — each servo motor connects to a 3-pin `Conn_01x03` header on the shield, wired as `PWM` (signal) / `+` (power) / `−` (ground). The KiCad schematic uses the standard `Motor:Motor_Servo` symbol for each motor instance (M1, M2, …). PWM signal lines route to Arduino digital pins (D0–D13) so each servo can be addressed independently in firmware using the Arduino `Servo` library.
+
+**Arduino pin headers** — the shield breaks out the full Arduino UNO R4 pin set: digital I/O (D0–D13), analogue/digital dual-function pins (A0/D14 through A5/D19), plus the special-function pins RESET, BOOT, IOREF, AREF, and the SPI bus signals RSPCKA, CIPO, and COPI. This leaves ample I/O headroom for future expansion — sensors, limit switches, or additional actuators.
+
+**Wireless control** — the Arduino UNO R4 WiFi's onboard ESP32-S3 co-processor handles the WiFi and Bluetooth link to the smartphone app, keeping the main RA4M1 MCU free for real-time servo PWM generation without communication overhead.
+
+The shield physically stacks directly on top of the Arduino using standard 2.54 mm pin headers, so no soldering to the Arduino board itself is required — only the shield PCB and its servo connectors need to be soldered.
+
+<Tip>
+  Robotic Arm Macondo is an ideal project for simultaneously learning three complementary engineering skills:
+
+  - **Mechanical linkage design** — the 4-bar upper arm and spur-gear claw expose you to real kinematic synthesis, gear meshing, and constraint-based motion design.
+  - **3D printing for functional parts** — all 13 components are load-bearing or precision-fit, giving you hands-on experience with print orientation, tolerancing, and post-processing for mechanical assemblies.
+  - **Arduino servo control** — driving multiple PWM servos from a single microcontroller, managing power rails, and integrating wireless communication are foundational embedded-systems skills with broad applicability.
+
+  The project is intentionally scoped so that each subsystem is approachable on its own but rewards deeper study as you work through the full build.
+</Tip>

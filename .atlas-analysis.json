@@ -1,0 +1,69 @@
+{
+  "projectType": "general",
+  "projectName": "Robotic Arm Macondo",
+  "projectDescription": "A 3D printed robotic arm and claw capable of being controlled through a smartphone app, built around an Arduino UNO R4 and servo motors.",
+  "theme": "palm",
+  "primaryColor": "#1651b0",
+  "lightColor": "#66af52",
+  "darkColor": "#b4dca4",
+  "navigation": {
+    "groups": [
+      {
+        "group": "Overview",
+        "pages": [
+          "introduction",
+          "design-philosophy"
+        ]
+      },
+      {
+        "group": "Build Guide",
+        "pages": [
+          "bill-of-materials",
+          "3d-printing",
+          "electronics",
+          "assembly"
+        ]
+      },
+      {
+        "group": "CAD Files",
+        "pages": [
+          "cad/overview",
+          "cad/printed-parts"
+        ]
+      },
+      {
+        "group": "Electronics & Firmware",
+        "pages": [
+          "electronics/schematic",
+          "electronics/smartphone-control"
+        ]
+      }
+    ]
+  },
+  "keyFeatures": [
+    "13 unique 3D-printed structural components (STL + STEP formats provided)",
+    "Arduino UNO R4 microcontroller with custom KiCad shield schematic",
+    "Multiple servo motors providing multi-axis arm movement and claw actuation",
+    "Smartphone app control via Bluetooth/WiFi",
+    "4-bar linkage mechanism for precise arm positioning",
+    "Complete Bill of Materials covering 3D-printed and purchased parts",
+    "OnShape cloud CAD model for reference and modification"
+  ],
+  "publicApiSurface": [
+    "CAD/STL/Master - Base.stl",
+    "CAD/STL/Master - Bearing Arm.stl",
+    "CAD/STL/Master - Claw Gear Left.stl",
+    "CAD/STL/Master - Claw Gear Right.stl",
+    "CAD/STL/Master - Claw Mount.stl",
+    "CAD/STL/Master - Left Mount.stl",
+    "CAD/STL/Master - Right Mount.stl",
+    "CAD/STL/Master - Servo Arm.stl",
+    "CAD/STL/Master - Spur Gear.stl",
+    "CAD/STL/Master - Third Arm.stl",
+    "CAD/STL/Master - Top 4 Bar Servo Arm.stl",
+    "CAD/STL/Master - Top Free Arm.stl",
+    "CAD/STL/Master - Top Mount.stl",
+    "KiCad Schematics/uno-r4-shield-template.kicad_sch",
+    "BOM.xlsx"
+  ]
+}

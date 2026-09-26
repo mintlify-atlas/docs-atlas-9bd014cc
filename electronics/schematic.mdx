@@ -1,0 +1,122 @@
+---
+title: "Arduino UNO R4 Shield Schematic and Wiring Guide"
+sidebarTitle: "Schematic"
+description: "The KiCad schematic for the Robotic Arm Macondo Arduino UNO R4 servo driver shield: power architecture, servo pin assignments, and connector layout."
+---
+
+The Robotic Arm Macondo uses a custom shield PCB that stacks directly on top of the Arduino UNO R4. Rather than wiring servo motors to the Arduino through a breadboard, the shield provides dedicated 3-pin servo connectors routed from the digital I/O headers, a dedicated battery-backed power rail for the servo motors, and four M3 mounting holes for mechanical rigidity. The KiCad source files are included in the repository so you can inspect every net, modify the layout, or fabricate the board yourself.
+
+## Schematic Overview
+
+The shield was designed as a plug-in board for the Arduino UNO R4, following the standard UNO shield form factor so it mates directly with the female headers on the microcontroller board.
+
+<CardGroup cols={2}>
+  <Card title="KiCad Source File" icon="file-code" href="/electronics">
+    `KiCad Schematics/uno-r4-shield-template.kicad_sch`
+  </Card>
+  <Card title="Revision & Author" icon="info-circle" href="/electronics">
+    Revision 1A — 2023-08-26 — based on the miekush Arduino UNO R4 shield template
+  </Card>
+</CardGroup>
+
+The schematic is drawn on a US Letter page and includes all Arduino UNO R4 header pins broken out as global net labels, two `Motor_Servo` symbols (M1 and M2) for prototype servo connections, the full power rail hierarchy, SPI and I2C bus labels, and four mounting hole references (H1–H4).
+
+## Power Architecture
+
+The shield uses a layered power system that keeps servo motor current completely separate from the Arduino's internal 5 V regulator. Running multiple servos from the Arduino's on-board regulator can cause voltage sags that reset the microcontroller mid-motion.
+
+```text Power rail hierarchy
+  Battery (external pack)
+       │
+   +BATT ──────────────────────────────────────┐
+       │                                        │
+   +7.5V (intermediate rail)              +VSW (switched enable)
+       │
+   +5V  (regulated servo power)
+       │
+   +3V3 (logic rail, if needed)
+       │
+   GND  (common ground — all rails share this)
+```
+
+| Rail | Voltage | Purpose |
+|------|---------|---------|
+| `+BATT` | Battery voltage (e.g. 7.4 V Li-Po) | Raw battery input |
+| `+7.5V` | 7.5 V | Intermediate regulated rail |
+| `+5V` | 5 V | Servo motor power |
+| `+3V3` | 3.3 V | Logic supply (if required) |
+| `+VSW` | Switched | Controlled power enable for loads |
+| `GND` | 0 V | Common ground for all rails |
+
+<Warning>
+  Power the servo rail from the battery, not from the Arduino 5V pin — servo motors draw enough current to reset the microcontroller.
+</Warning>
+
+## Pin Assignments Table
+
+The following table maps Arduino UNO R4 pin names to their role on the shield. Pins marked **PWM-capable** can generate hardware-timed 50 Hz servo pulses using the `Servo.h` library without software overhead.
+
+| Arduino Pin | Function | Notes |
+|---|---|---|
+| D2 | Servo PWM | Digital output |
+| D3~ | Servo PWM | PWM-capable |
+| D4 | Servo PWM | Digital output |
+| D5~ | Servo PWM | PWM-capable |
+| D6~ | Servo PWM | PWM-capable |
+| D7 | Servo PWM | Digital output |
+| D8 | Servo PWM | Digital output |
+| D12 | Servo PWM | Digital output |
+| D13 | Servo PWM / LED | Built-in LED shared |
+| A0/D14 | Analog/Digital | Sensor input |
+| A4/D18 | SDA | I2C data |
+| A5/D19 | SCL | I2C clock |
+| RSPCKA | SPI Clock | SPI interface |
+| CIPO | SPI MISO | Controller In / Peripheral Out |
+| COPI | SPI MOSI | Controller Out / Peripheral In |
+
+The digital connector J5 (labelled **DIGITAL1**) is an 8-pin header that exposes D0–D7, and a second header covers D8–D13, D18, D19, AREF, and BOOT. The analog bank connector J1 exposes RESET, IOREF, OFF, and the A0/D14–A5/D19 dual-function pins.
+
+## Servo Connector Pinout
+
+Each servo motor connects to a dedicated 3-pin Dupont/JST connector (`Conn_01x03`) on the shield. All connectors share the same pin ordering, matching the standard Futaba / HiTec / JR servo cable colour convention (signal–power–ground or orange/white–red–black/brown depending on your servo brand).
+
+```text Servo Connector (3-pin)
+┌─────────────┐
+│ 1: PWM/SIG  │ ← Arduino digital pin (D2–D13)
+│ 2: +5V PWR  │ ← Shield 5V rail
+│ 3: GND      │ ← Common ground
+└─────────────┘
+```
+
+The shield carries two `Motor_Servo` schematic symbols (M1 and M2) that route directly to their respective PWM signal lines and the +5V / GND power rails. Additional servo connectors for the remaining joints follow the same three-pin pattern.
+
+<Note>
+  Standard hobby servo cables follow the Futaba colour code: orange or white = signal, red = +5V, brown or black = GND. Always confirm your servo's pinout before plugging in — some clones reverse the signal and power pins.
+</Note>
+
+## Mounting
+
+The shield PCB includes four M3 mounting holes — **H1, H2, H3, H4** — positioned at the corners to align with standard Arduino UNO shield standoff patterns. Use M3 × 10 mm hex standoffs between the shield and the Arduino board, and M3 × 6 mm screws to attach the top of the shield to a chassis panel if required.
+
+| Reference | Size | Footprint |
+|-----------|------|-----------|
+| H1 | M3 | `MountingHole:MountingHole_3.2mm_M3` |
+| H2 | M3 | `MountingHole:MountingHole_3.2mm_M3` |
+| H3 | M3 | `MountingHole:MountingHole_3.2mm_M3` |
+| H4 | M3 | `MountingHole:MountingHole_3.2mm_M3` |
+
+## KiCad Files
+
+All three KiCad project files are provided in the `KiCad Schematics/` directory of the repository:
+
+| File | Purpose |
+|------|---------|
+| `uno-r4-shield-template.kicad_sch` | Full schematic with all symbols and nets |
+| `uno-r4-shield-template.kicad_pro` | KiCad project configuration |
+| `uno-r4-shield-template.kicad_prl` | Local project settings |
+
+Open the `.kicad_pro` file in KiCad 7 or later to load the complete project, including the PCB layout editor (if a `.kicad_pcb` file is added in the future).
+
+<Note>
+  The shield template was based on miekush's Arduino UNO R4 shield template. The KiCad source files allow you to add your own components or modify the PCB layout to fit additional sensors, motor drivers, or custom circuitry specific to your Robotic Arm Macondo build.
+</Note>

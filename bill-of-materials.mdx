@@ -1,0 +1,87 @@
+---
+title: "Bill of Materials for Robotic Arm Macondo"
+sidebarTitle: "Bill of Materials"
+description: "Complete parts list for building Robotic Arm Macondo, including 3D-printed parts, electronic components, and hardware fasteners with sourcing links."
+---
+
+The Robotic Arm Macondo bill of materials is organized into three categories: 3D-printed structural components, electronic components, and hardware fasteners. Every part in this list is required to build a complete, functional arm. The 3D-printed parts can be produced on any desktop FDM printer, the electronics are sourced from well-stocked hobby and maker retailers, and the fasteners are standard metric hardware available from industrial suppliers. Work through each section before placing orders so you can consolidate shipments and avoid project delays.
+
+## 3D-Printed Parts
+
+All 13 structural components are printed from the STL files located in `CAD/STL/` of the project repository. STEP files are also available in `CAD/STEP/` for import into CAD software if you need to modify any parts. Print quantities are listed below; note that the Claw Gear and Mount assemblies come in mirrored left/right pairs.
+
+| Part Name | File | Qty | Notes |
+|---|---|---|---|
+| Base | `Master - Base.stl` | 1 | Largest part; foundation of the arm |
+| Bearing Arm | `Master - Bearing Arm.stl` | 1 | Primary shoulder joint element |
+| Claw Gear Left | `Master - Claw Gear Left.stl` | 1 | Left side of spur gear claw mechanism |
+| Claw Gear Right | `Master - Claw Gear Right.stl` | 1 | Right side of spur gear claw mechanism |
+| Claw Mount | `Master - Claw Mount.stl` | 1 | Mounts claw assembly to end of arm |
+| Left Mount | `Master - Left Mount.stl` | 1 | Left shoulder pivot point |
+| Right Mount | `Master - Right Mount.stl` | 1 | Right shoulder pivot point (mirror of Left Mount) |
+| Servo Arm | `Master - Servo Arm.stl` | 1 | Attaches to shoulder servo motor shaft |
+| Spur Gear | `Master - Spur Gear.stl` | 1 | Central drive gear for claw actuation |
+| Third Arm | `Master - Third Arm.stl` | 1 | First major arm segment (links Bearing Arm to linkage) |
+| Top 4 Bar Servo Arm | `Master - Top 4 Bar Servo Arm.stl` | 1 | Driven link in the 4-bar parallelogram linkage |
+| Top Free Arm | `Master - Top Free Arm.stl` | 1 | Free-moving link in the 4-bar parallelogram linkage |
+| Top Mount | `Master - Top Mount.stl` | 1 | Terminating mount at top of linkage assembly |
+
+## Electronic Components
+
+The electronics system is built around an Arduino UNO R4 WiFi, which provides both the servo PWM outputs and the onboard WiFi module used for smartphone control. A custom shield PCB — designed in KiCad — sits on top of the Arduino and routes power and PWM signals to each servo motor via 3-pin connectors (`Conn_01x03`).
+
+| Component | Qty | Notes |
+|---|---|---|
+| Arduino UNO R4 WiFi | 1 | WiFi variant required for smartphone app control |
+| Servo Motors | 6 | One per joint: base rotation, shoulder, elbow, wrist, claw open/close, claw rotation |
+| Custom Shield PCB | 1 | KiCad files in `KiCad Schematics/`; fab or hand-wire |
+| 7.5V Battery Pack | 1 | Main power source; feeds +BATT rail on shield |
+| Jumper / servo extension wires | 1 set | 3-pin servo connectors (PWM, +5V, GND) |
+| Male header strips (2.54 mm pitch) | 1 set | To match Arduino UNO R4 shield footprint |
+
+## Hardware & Fasteners
+
+Mechanical fasteners join the 3D-printed parts together and secure servo motors in their housings. The shield PCB uses `MountingHole_3.2mm_M3` footprints (referenced as H1–H4 in the KiCad schematic), indicating M3 hardware throughout. Exact part numbers, lengths, and quantities for every fastener are listed in `BOM.xlsx` in the project repository.
+
+| Hardware | Size | Notes |
+|---|---|---|
+| Socket head cap screws | M3 | Main structural fasteners |
+| Button head screws | M3 | Servo motor mounting |
+| Hex nuts | M3 | Captive nut inserts in printed parts |
+| Washers | M3 | Load distribution on pivot points |
+
+<Note>
+  The exact quantities and part numbers for every fastener and consumable are recorded in **BOM.xlsx** in the project repository. Always cross-reference that spreadsheet before ordering to ensure you have the correct lengths and grades for each location in the assembly.
+</Note>
+
+## Where to Buy
+
+The hardware, electronics, and fasteners for Robotic Arm Macondo are available from three primary suppliers. The repository's `Images/` directory contains shopping cart screenshots confirming which items were sourced from each store.
+
+<CardGroup cols={3}>
+  <Card
+    title="Arduino Store"
+    icon="microchip"
+    href="https://store.arduino.cc"
+  >
+    Source the **Arduino UNO R4 WiFi** and compatible header strips directly from the official Arduino store to ensure genuine hardware.
+  </Card>
+  <Card
+    title="McMaster-Carr"
+    icon="screwdriver-wrench"
+    href="https://www.mcmaster.com"
+  >
+    Industrial fastener supplier for all **M3 screws, bolts, nuts, and washers**. Broad stock and same-day shipping for most items.
+  </Card>
+  <Card
+    title="ServoCity"
+    icon="gear"
+    href="https://www.servocity.com"
+  >
+    Specialty robotics supplier for **servo motors** and servo accessories. Carries a wide range of torque ratings suitable for each arm joint.
+  </Card>
+</CardGroup>
+
+<Tip>
+  Order all hardware, electronics, and fasteners **before** you begin printing. Print times for all 13 parts can exceed 20 hours depending on your printer and settings — having everything on hand when printing finishes lets you move straight into assembly without waiting for delayed shipments.
+</Tip>

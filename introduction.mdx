@@ -1,0 +1,63 @@
+---
+title: "Robotic Arm Macondo: Open-Source Arduino Robotic Arm"
+sidebarTitle: "Introduction"
+description: "Robotic Arm Macondo is a 3D-printed multi-axis robotic arm with smartphone control, built on Arduino UNO R4 with servo motors and a 4-bar linkage."
+---
+
+Robotic Arm Macondo is a fully open-source, 3D-printed robotic arm and claw that you can build yourself and control wirelessly through a smartphone app. Powered by an Arduino UNO R4 (WiFi variant recommended) and driven by multiple servo motors, the arm uses a 4-bar linkage mechanism for smooth, stable motion and a spur-gear claw for reliable gripping. Everything you need to reproduce it — CAD files, firmware, a bill of materials, and step-by-step assembly instructions — is provided free of charge. Whether you are a student exploring mechatronics or a maker looking for a hands-on servo-control project, Robotic Arm Macondo is designed to be both challenging and deeply rewarding to build.
+
+<CardGroup cols={2}>
+  <Card title="Bill of Materials" icon="list-check" href="/bill-of-materials">
+    Full parts list with sourcing links for every component — hardware, electronics, and fasteners.
+  </Card>
+  <Card title="3D Printing Guide" icon="cube" href="/3d-printing">
+    Print settings, recommended materials, and orientation tips for all 13 structural components.
+  </Card>
+  <Card title="Assembly" icon="screwdriver-wrench" href="/assembly">
+    Step-by-step instructions for putting together the arm, from base to claw.
+  </Card>
+  <Card title="Electronics & Schematic" icon="microchip" href="/electronics/schematic">
+    Arduino UNO R4 shield schematic, servo wiring diagrams, and power architecture overview.
+  </Card>
+</CardGroup>
+
+## What This Project Provides
+
+Robotic Arm Macondo ships with four core deliverables so you can build a complete, working arm from scratch:
+
+- **All CAD files** — 13 STEP files for every 3D-printed component, plus the full OnShape assembly model, so you can inspect, modify, and slice each part.
+- **All code** — Arduino firmware for receiving smartphone commands and driving the servo motors with PWM signals.
+- **Bill of materials** — a curated, itemised list covering printed parts, servo motors, fasteners, and electronics, sourced from McMaster-Carr, ServoCity, and the Arduino Store.
+- **Step-by-step assembly instructions** — detailed guidance that takes you from a pile of printed parts to a fully operational robotic arm.
+
+## What You'll Need
+
+Before you start, gather the following:
+
+- **A 3D printer** — FDM printers with a 0.4 mm nozzle are sufficient for all 13 components; PLA or PETG is recommended.
+- **Arduino UNO R4 (WiFi)** — the WiFi variant is strongly recommended for wireless smartphone control over Bluetooth/WiFi. The standard UNO R4 Minima will work for wired testing.
+- **Servo motors** — multiple hobby-grade servos (Futaba / HiTec / JR-style, 3-pin PWM connector). Refer to the [Bill of Materials](/bill-of-materials) for exact models and quantities.
+- **Structural hardware** — sourced primarily from **McMaster-Carr** (fasteners, bearings, shafts) and **ServoCity** (servo mounts, hubs, and linkage hardware).
+- **Electronics hardware** — available from the **Arduino Store** and general electronics suppliers: pin headers, the custom UNO R4 shield PCB, and power connectors.
+- **Soldering tools** — a basic soldering iron, solder, and flux are required to assemble the shield and servo connectors.
+- **Smartphone** — iOS or Android, used to control the arm through the companion app via the Arduino UNO R4's onboard WiFi/Bluetooth module.
+
+## Key Specifications
+
+| Specification | Detail |
+|---|---|
+| 3D-printed components | 13 unique parts |
+| Microcontroller | Arduino UNO R4 (WiFi recommended) |
+| Actuation | Multiple servo motors (PWM-controlled) |
+| Arm mechanism | 4-bar linkage |
+| Claw mechanism | Spur gear (single motor, dual claw gears) |
+| Control interface | Smartphone app (WiFi / Bluetooth) |
+| Power supply | Battery → 7.5 V → 5 V / 3.3 V regulated rails |
+| CAD platform | OnShape (cloud-based, fully parametric) |
+
+<Note>
+  The complete OnShape CAD assembly — including all part geometry, constraints, and assembly mates — is publicly available at:
+  [https://cad.onshape.com/documents/c667b97a3a2d7a4859eb4271/w/a18409ec0f56e84081c11f96/e/3d0234714fafda30fd940069](https://cad.onshape.com/documents/c667b97a3a2d7a4859eb4271/w/a18409ec0f56e84081c11f96/e/3d0234714fafda30fd940069)
+
+  You can view, copy, and modify the model directly in your browser without installing any software.
+</Note>

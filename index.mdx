@@ -1,20 +1,62 @@
 ---
-title: "Introduction"
-description: "Welcome to your project"
+title: "Robotic Arm Macondo: 3D Printed Arduino Robotic Arm"
+sidebarTitle: "Home"
+description: "Build a fully articulated 3D printed robotic arm and claw controlled via a smartphone app, powered by an Arduino UNO R4 and servo motors."
 ---
 
-Write a short description of your product here. What it does, who it's for, and what they can accomplish with it.
+Robotic Arm Macondo is an open-source hardware project that lets you build a fully articulated, 3D-printed robotic arm with a functional claw — all controllable from your smartphone. The arm uses a 4-bar linkage mechanism, 13 custom-printed structural parts, and an Arduino UNO R4 shield driving multiple servo motors.
 
-<Tip>
-  Ready to make this your own? Start by editing this page. Update your `docs.json` file to customize your site. Then fill out the [Quickstart](/quickstart) page.
-</Tip>
+<CardGroup cols={2}>
+  <Card title="Introduction" icon="book-open" href="/introduction">
+    Learn what Robotic Arm Macondo is, what it can do, and what you'll need to build it.
+  </Card>
+  <Card title="Bill of Materials" icon="list-check" href="/bill-of-materials">
+    Every part you need to purchase or print, with sourcing links and quantities.
+  </Card>
+  <Card title="3D Printing Guide" icon="cube" href="/3d-printing">
+    Print settings, filament recommendations, and part-by-part printing instructions.
+  </Card>
+  <Card title="Assembly Guide" icon="screwdriver-wrench" href="/assembly">
+    Step-by-step assembly instructions to put your arm together.
+  </Card>
+</CardGroup>
 
-<Card title="Quickstart" icon="rocket" href="/quickstart">
-  This card links to the quickstart page in your project.
-</Card>
-<Card title="Components" icon="puzzle-piece" href="https://mintlify.com/docs/components">
-  Add cards, callouts, steps, tabs, and more to design and structure your pages.
-</Card>
-<Card title="Settings" icon="gear" href="https://mintlify.com/docs/organize/settings">
-  Set your site name, branding, and navigation in the `docs.json` file.
-</Card>
+## What You'll Build
+
+Robotic Arm Macondo is a multi-axis robotic arm with a pincer claw, driven by servo motors and controlled wirelessly from a smartphone app. The design features a 4-bar linkage for smooth, mechanically stable arm movement and a spur-gear claw mechanism for reliable gripping.
+
+<CardGroup cols={2}>
+  <Card title="CAD Files" icon="shapes" href="/cad/overview">
+    Download STL and STEP files for all 13 printed components.
+  </Card>
+  <Card title="Electronics & Schematic" icon="microchip" href="/electronics/schematic">
+    Explore the KiCad Arduino UNO R4 shield schematic and wiring details.
+  </Card>
+  <Card title="Design Philosophy" icon="lightbulb" href="/design-philosophy">
+    Why this 4-bar linkage design was chosen and what makes it a strong learning project.
+  </Card>
+  <Card title="Smartphone Control" icon="mobile" href="/electronics/smartphone-control">
+    Connect your arm to a smartphone app and start controlling it wirelessly.
+  </Card>
+</CardGroup>
+
+## Quick Start
+
+<Steps>
+  <Step title="Gather your parts">
+    Review the [Bill of Materials](/bill-of-materials) and order hardware from Arduino Store, McMaster-Carr, and ServoCity.
+  </Step>
+  <Step title="Print all 13 components">
+    Follow the [3D Printing Guide](/3d-printing) to print every structural part from the provided STL files.
+  </Step>
+  <Step title="Build the electronics shield">
+    Use the [KiCad schematic](/electronics/schematic) to assemble the Arduino UNO R4 servo driver shield.
+  </Step>
+  <Step title="Assemble and connect">
+    Follow the [Assembly Guide](/assembly) to put the arm together, then set up [smartphone control](/electronics/smartphone-control) to start operating it.
+  </Step>
+</Steps>
+
+<Note>
+  All CAD files are available in both STL (for slicing) and STEP (for modification) formats. The full OnShape model is publicly accessible at [cad.onshape.com](https://cad.onshape.com/documents/c667b97a3a2d7a4859eb4271/w/a18409ec0f56e84081c11f96/e/3d0234714fafda30fd940069).
+</Note>

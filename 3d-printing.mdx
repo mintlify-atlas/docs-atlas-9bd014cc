@@ -1,0 +1,115 @@
+---
+title: "3D Printing All 13 Structural Components"
+sidebarTitle: "3D Printing"
+description: "Print settings, filament recommendations, and part-specific tips for printing all 13 Robotic Arm Macondo components from STL files."
+---
+
+3D printing is the primary manufacturing method for Robotic Arm Macondo. Every structural component — from the broad base plate to the fine gear teeth of the claw mechanism — is designed to be produced on a standard desktop FDM printer without any specialized tooling. The 13 STL files in the repository cover all parts needed for a complete build. Before slicing, read through the recommended settings and the per-part tips below; a few parts have geometry that benefits from deliberate orientation or elevated infill density, and getting these right on the first attempt will save significant reprint time.
+
+<Warning>
+  Do not skip infill — structural parts need sufficient density to withstand servo torque. Under-filled arms and mounts can crack or delaminate under load, potentially causing the arm to fail during operation.
+</Warning>
+
+## Recommended Print Settings
+
+The table below covers baseline settings that work across all 13 parts. Part-specific overrides are noted in the accordion list in the next section.
+
+| Setting | Standard Parts | Gear / Fine-Detail Parts |
+|---|---|---|
+| **Material** | PLA or PETG | PLA or PETG |
+| **Layer height** | 0.20 mm | 0.15 mm |
+| **Infill density** | 40% | 60% or higher |
+| **Infill pattern** | Grid or Gyroid | Gyroid |
+| **Print speed** | 50 mm/s | 40 mm/s |
+| **Supports** | As needed per part | Yes for overhangs |
+| **Perimeters / walls** | 3 | 4 |
+| **Top/Bottom layers** | 4 | 5 |
+
+**Filament recommendation:** PLA is suitable for most parts and produces accurate dimensional tolerances. Use PETG for the Base, Left Mount, Right Mount, and Bearing Arm if the arm will operate in warm environments (above 40 °C) or carry heavier payloads — PETG offers higher heat deflection and better layer adhesion under sustained mechanical stress.
+
+## Parts List with Print Tips
+
+Work through each part in the order below. Parts are grouped loosely from largest to smallest to help you plan your print queue efficiently.
+
+<AccordionGroup>
+  <Accordion title="Base — Master - Base.stl">
+    The Base is the largest single part in the assembly and serves as the foundation to which all other components attach. Print it flat-side down — no supports are needed in this orientation, and the large flat bottom surface produces an excellent first layer. Use 40% infill minimum; the four M3 mounting hole bosses (matching the shield PCB's `MountingHole_3.2mm_M3` footprint) must resist repeated fastener torque. PETG is recommended for added rigidity. Estimated print time: 4–6 hours at standard settings.
+  </Accordion>
+
+  <Accordion title="Bearing Arm — Master - Bearing Arm.stl">
+    The Bearing Arm is the primary shoulder joint element; its bearing surfaces must be smooth and dimensionally accurate for low-friction rotation. Print with supports enabled — the part has overhanging bore geometry that requires support material to maintain roundness. Remove support material carefully using flush cutters and a deburring tool; rough bearing surfaces cause binding at the shoulder joint. A 0.20 mm layer height is sufficient; no need to drop to 0.15 mm unless your printer has dimensional tolerance issues above ±0.3 mm.
+  </Accordion>
+
+  <Accordion title="Claw Gear Left — Master - Claw Gear Left.stl">
+    This is the left-side gear of the spur gear claw mechanism. Gear tooth quality is critical — meshing errors lead to claw backlash and inconsistent grip force. **Print at 0.15 mm layer height** and reduce print speed to 40 mm/s for the gear tooth perimeters. Use 60% infill. Align the gear so the tooth faces are parallel to the build plate where possible, minimising stair-stepping on tooth flanks. No supports needed if oriented with the flat hub face down.
+  </Accordion>
+
+  <Accordion title="Claw Gear Right — Master - Claw Gear Right.stl">
+    Mirror-image counterpart to Claw Gear Left. Apply identical settings: 0.15 mm layer height, 60%+ infill, 40 mm/s perimeter speed. Print both claw gears in the same session on the same plate to ensure matched dimensional consistency; gears printed at different times on different temperature profiles can have subtle size differences that cause uneven meshing.
+  </Accordion>
+
+  <Accordion title="Claw Mount — Master - Claw Mount.stl">
+    The Claw Mount bridges the end of the arm linkage to the gear assembly. It contains bridge geometry spanning the servo motor pocket — enable supports or bridging optimisation in your slicer depending on your printer's bridging capability. If your slicer has a dedicated bridge layer speed setting, slow bridges to 25 mm/s for a cleaner span. 40% infill and 0.20 mm layer height are adequate. Clean out any support material from the servo pocket fully before assembly.
+  </Accordion>
+
+  <Accordion title="Left Mount — Master - Left Mount.stl">
+    The Left Mount attaches to the Base and forms the left shoulder pivot point. It is structurally loaded during arm operation and benefits from 40% infill minimum and PETG if available. Print with the base flange flat on the build plate; supports may be needed for the pivot bore depending on its angle. This part and Right Mount are mirror images — print them together in the same session to ensure matched dimensions.
+  </Accordion>
+
+  <Accordion title="Right Mount — Master - Right Mount.stl">
+    Mirror of Left Mount. Print settings are identical: 40% infill, 0.20 mm layer height, PETG recommended. Print alongside Left Mount on the same build plate wherever possible. After printing, test-fit both mounts against the Base before proceeding — slight warping on large flat parts can prevent the mounts from seating flush.
+  </Accordion>
+
+  <Accordion title="Servo Arm — Master - Servo Arm.stl">
+    The Servo Arm is a small part that presses onto the shoulder servo motor shaft and drives the arm motion. Standard settings apply: 0.20 mm layer height, 40% infill, 50 mm/s. The spline or press-fit bore is the critical dimension — if your printer tends to over-extrude, run an initial calibration cube print and tune your extrusion multiplier before printing this part. A tight fit on the servo shaft is preferable to a loose one; you can carefully enlarge a tight hole with a round file, but you cannot recover a sloppy fit.
+  </Accordion>
+
+  <Accordion title="Spur Gear — Master - Spur Gear.stl">
+    The Spur Gear is the central drive gear that transmits claw servo torque to the two claw gears. Like the claw gears, tooth quality is paramount. **Print at 0.15 mm layer height**, 60%+ infill, and 40 mm/s perimeter speed. Orient the gear so the largest flat face sits on the build plate; this minimises stair-stepping on tooth flanks and produces the cleanest tooth geometry. No supports required in this orientation.
+  </Accordion>
+
+  <Accordion title="Third Arm — Master - Third Arm.stl">
+    The Third Arm is a structural linkage segment connecting the Bearing Arm to the 4-bar linkage assembly. It carries bending loads during arm extension, so maintain 40% infill and consider increasing perimeter count to 4 for additional wall strength. Print at standard 0.20 mm layer height. Supports may be required depending on part orientation; orient the long axis horizontally where possible to maximise layer bond strength along the primary stress direction.
+  </Accordion>
+
+  <Accordion title="Top 4 Bar Servo Arm — Master - Top 4 Bar Servo Arm.stl">
+    This part is the driven link of the 4-bar parallelogram linkage and attaches to the servo motor driving the upper arm segment. Accurate pivot hole diameter is important for correct linkage geometry — ensure your printer is dimensionally calibrated before printing. Use 40% infill and 0.20 mm layer height. Supports may be needed depending on pivot hole orientation relative to the build plate.
+  </Accordion>
+
+  <Accordion title="Top Free Arm — Master - Top Free Arm.stl">
+    The Top Free Arm is the passive (free-moving) link in the 4-bar parallelogram linkage. It does not carry servo loads directly but must move smoothly to maintain the parallel geometry of the linkage. Print at 0.20 mm layer height and 40% infill. After printing, lightly sand or deburr pivot hole interiors to ensure smooth rotation; any roughness here introduces friction that makes the linkage feel stiff.
+  </Accordion>
+
+  <Accordion title="Top Mount — Master - Top Mount.stl">
+    The Top Mount terminates the linkage assembly and provides attachment points for the Claw Mount. Print at 0.20 mm layer height and 40% infill. Supports may be needed for any overhanging boss geometry. Verify all bore dimensions are correct before assembly — this is one of the last parts installed and re-printing it late in the build is costly in time.
+  </Accordion>
+</AccordionGroup>
+
+## File Locations
+
+All print-ready files are organized in the project repository as follows:
+
+```
+CAD/
+├── STL/          ← Use these files for printing
+│   ├── Master - Base.stl
+│   ├── Master - Bearing Arm.stl
+│   ├── Master - Claw Gear Left.stl
+│   ├── Master - Claw Gear Right.stl
+│   ├── Master - Claw Mount.stl
+│   ├── Master - Left Mount.stl
+│   ├── Master - Right Mount.stl
+│   ├── Master - Servo Arm.stl
+│   ├── Master - Spur Gear.stl
+│   ├── Master - Third Arm.stl
+│   ├── Master - Top 4 Bar Servo Arm.stl
+│   ├── Master - Top Free Arm.stl
+│   └── Master - Top Mount.stl
+└── STEP/         ← Use these files for CAD modifications
+```
+
+If you want to inspect or modify the geometry before printing, import the STEP files into your CAD tool of choice. The original parametric model is hosted on OnShape — see the [CAD overview page](/cad/overview) for a direct link and instructions.
+
+<Note>
+  STL files are exported directly from the OnShape master model and are ready to slice without any repair steps. If your slicer reports non-manifold geometry, re-export the STL from OnShape using the **Download** → **STL** option with **Resolution: Fine** selected.
+</Note>

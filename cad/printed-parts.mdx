@@ -1,0 +1,111 @@
+---
+title: "3D-Printed Parts Reference for Robotic Arm Macondo"
+sidebarTitle: "Printed Parts"
+description: "Detailed reference for all 13 printed components of Robotic Arm Macondo: their role in the arm, print recommendations, and where they fit in the assembly."
+---
+
+Robotic Arm Macondo is built from 13 unique 3D-printed parts. Together they form a complete kinematic chain — from the fixed base plate all the way through the shoulder mounts, two arm segments, a 4-bar parallelogram linkage, and the gear-driven claw end-effector. This page describes each part's role, which assembly region it belongs to, and any print considerations worth knowing before you start slicing.
+
+## Summary Table
+
+| Part Name | Assembly Region | Qty | STL File |
+|---|---|:---:|---|
+| Master - Base | Base Assembly | 1 | `Master - Base.stl` |
+| Master - Left Mount | Base Assembly | 1 | `Master - Left Mount.stl` |
+| Master - Right Mount | Base Assembly | 1 | `Master - Right Mount.stl` |
+| Master - Bearing Arm | Arm Linkage | 1 | `Master - Bearing Arm.stl` |
+| Master - Third Arm | Arm Linkage | 1 | `Master - Third Arm.stl` |
+| Master - Servo Arm | Arm Linkage | 1 | `Master - Servo Arm.stl` |
+| Master - Top 4 Bar Servo Arm | 4-Bar Linkage | 1 | `Master - Top 4 Bar Servo Arm.stl` |
+| Master - Top Free Arm | 4-Bar Linkage | 1 | `Master - Top Free Arm.stl` |
+| Master - Top Mount | 4-Bar Linkage | 1 | `Master - Top Mount.stl` |
+| Master - Spur Gear | Claw Assembly | 1 | `Master - Spur Gear.stl` |
+| Master - Claw Gear Left | Claw Assembly | 1 | `Master - Claw Gear Left.stl` |
+| Master - Claw Gear Right | Claw Assembly | 1 | `Master - Claw Gear Right.stl` |
+| Master - Claw Mount | Claw Assembly | 1 | `Master - Claw Mount.stl` |
+
+## Parts by Assembly Region
+
+<Accordion title="Base Assembly — foundation of the arm">
+
+The base assembly anchors the entire arm to a surface and provides the shoulder pivot points. These three parts are the first to be assembled and must sit flat and level for the rest of the kinematic chain to operate correctly.
+
+**Master - Base**
+
+The main foundation plate and the largest single part in the set. It carries all of the arm's weight and reaction forces. Four M3 mounting hole positions allow the base to be bolted to a workbench, mounting plate, or custom frame. Print with high infill (≥ 40 %) and at least 3 perimeters for rigidity.
+
+**Master - Left Mount**
+
+The left-side shoulder pivot bracket. It attaches to the top face of the Base and receives the axle or fastener around which the Bearing Arm rotates. This part is the mirror image of the Right Mount.
+
+**Master - Right Mount**
+
+The right-side shoulder pivot bracket. Functionally identical to the Left Mount but oriented as its mirror. Together the two mounts form a symmetric saddle that cradles the Bearing Arm pivot.
+
+<Tip>
+  The Left Mount and Right Mount are mirror images — check orientation carefully before printing. If your slicer has a mirror function, print one and mirror it instead of printing two identical copies.
+</Tip>
+
+</Accordion>
+
+<Accordion title="Arm Linkage — the main arm segments">
+
+These three parts make up the primary arm structure. They form a serial chain from the shoulder pivot up to the 4-bar linkage, with servo-driven motion at each joint.
+
+**Master - Bearing Arm**
+
+The primary shoulder-level arm segment. It features a bearing interface that sits between the Left Mount and Right Mount, allowing smooth, low-friction rotation at the shoulder joint. This is typically the longest structural part in the chain.
+
+**Master - Third Arm**
+
+The second arm segment, connecting the shoulder assembly to the upper arm region where the 4-bar linkage begins. Its length determines the mid-arm reach of the robot.
+
+**Master - Servo Arm**
+
+Attaches directly to a servo motor horn and translates servo rotation into arm movement. The geometry is matched to standard hobby servo horn bolt patterns so it can be secured without modification.
+
+</Accordion>
+
+<Accordion title="4-Bar Linkage — upper arm parallelogram mechanism">
+
+A 4-bar parallelogram linkage keeps the end-effector (claw) level regardless of the arm's elevation angle. This is a common mechanism in industrial manipulators and ensures the claw always faces the same direction throughout the arm's range of motion.
+
+**Master - Top 4 Bar Servo Arm**
+
+The servo-driven link in the 4-bar parallelogram. A servo motor actuates this arm, and the geometry of the parallelogram transfers the motion to the free arm on the opposite side.
+
+**Master - Top Free Arm**
+
+The free (follower) link of the 4-bar parallelogram. It is not directly driven; instead it remains parallel to the Top 4 Bar Servo Arm at all positions, which is what keeps the claw mount oriented consistently.
+
+**Master - Top Mount**
+
+The mounting bracket at the apex of the 4-bar linkage. It connects the upper ends of both the Top 4 Bar Servo Arm and the Top Free Arm, and it provides the interface to the claw assembly below.
+
+</Accordion>
+
+<Accordion title="Claw Assembly — end-effector gripper">
+
+The claw assembly is a gear-driven gripper at the tip of the arm. A single servo motor turns the Spur Gear, which simultaneously drives both claw finger gears inward or outward, opening and closing the fingers symmetrically.
+
+**Master - Spur Gear**
+
+The central drive gear for the claw mechanism. It sits on the servo output shaft and meshes with both claw finger gears at once, ensuring both fingers move by equal and opposite angles every time the servo turns.
+
+**Master - Claw Gear Left**
+
+The left claw finger gear. Its teeth mesh directly with the Spur Gear. As the spur gear rotates, this gear swings the left finger open or closed.
+
+**Master - Claw Gear Right**
+
+The right claw finger gear. Its teeth mesh with the Spur Gear on the opposite side from the left gear, producing the symmetric closing motion.
+
+**Master - Claw Mount**
+
+The structural mount that holds the Spur Gear, Claw Gear Left, and Claw Gear Right in precise alignment. All three gear axles pass through this mount, so accurate printing dimensions are important here. It also attaches the entire claw assembly to the Top Mount above.
+
+<Note>
+  Gear parts (Spur Gear, Claw Gear Left, Claw Gear Right) benefit from a fine layer height (0.15 mm) to ensure smooth gear tooth meshing.
+</Note>
+
+</Accordion>

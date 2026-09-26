@@ -1,0 +1,70 @@
+---
+title: "CAD Files Overview: STL and STEP Downloads"
+sidebarTitle: "Overview"
+description: "All 13 CAD files for Robotic Arm Macondo are available in STL for 3D printing and STEP for modification in any CAD tool, plus the full OnShape model."
+---
+
+Robotic Arm Macondo ships with a complete CAD file package covering every one of its 13 printed components. Whether you want to slice and print the parts exactly as designed, or open them in your preferred CAD tool to adapt dimensions for your own build, everything you need is included in the repository under the `CAD/` directory.
+
+## File Formats
+
+Two formats are provided for every part so that the files work seamlessly across different workflows:
+
+- **STL** (`.stl`): Ready-to-slice format for 3D printing. Import directly into slicing software such as PrusaSlicer, Cura, or Bambu Studio. No CAD software required — just open, orient, and slice.
+- **STEP** (`.step`): Neutral CAD exchange format recognised by virtually every professional and hobbyist CAD tool. Open in Fusion 360, SolidWorks, FreeCAD, or any other STEP-compatible application to inspect geometry, adjust dimensions, or integrate parts into a larger assembly.
+
+## Repository Structure
+
+The `CAD/` folder in the repository is split into two sub-folders — one per format:
+
+```
+CAD/
+├── STL/          # 13 STL files for 3D printing
+│   ├── Master - Base.stl
+│   ├── Master - Bearing Arm.stl
+│   └── ... (11 more)
+└── STEP/         # 13 STEP files for CAD editing
+    ├── Master - Base.step
+    ├── Master - Bearing Arm.step
+    └── ... (11 more)
+```
+
+Each file corresponds to exactly one printed part. The naming is consistent across both folders, so `Master - Claw Mount.stl` and `Master - Claw Mount.step` always represent the same geometry.
+
+## OnShape Cloud Model
+
+The original design lives in a public OnShape document, which you can open in any browser without installing software:
+
+**[Open the Robotic Arm Macondo OnShape model →](https://cad.onshape.com/documents/c667b97a3a2d7a4859eb4271/w/a18409ec0f56e84081c11f96/e/3d0234714fafda30fd940069)**
+
+OnShape is free to use with a free account. With the cloud model you can:
+
+- View the full assembly and inspect every part in 3D
+- Use the built-in measure tool to check dimensions without downloading anything
+- Copy individual parts into your own OnShape document to modify them in the browser
+
+If you only need to print the parts unchanged, the STL files in the repository are the fastest route. The OnShape link is most useful when you want to take measurements, understand how parts mate together, or fork the design.
+
+## Modifying the Design
+
+If you want to adapt the arm — for example to fit different servo horns, change link lengths, or add mounting features — the STEP files are the recommended starting point:
+
+1. **Fusion 360**: Use *File → Open → From my computer* and select any `.step` file. Fusion will import the body as a solid. Enable the *Design* workspace to add sketches and features on top.
+2. **FreeCAD**: Use *File → Import* and choose the STEP format. The part will appear as a solid in the Part workbench, where you can add operations or export a modified STL directly.
+
+For structural changes that affect multiple parts (for example, adjusting the 4-bar linkage ratio), it is worth working from the OnShape master document instead, since all constraints and mates are already defined there.
+
+## Next Steps
+
+<CardGroup cols={2}>
+  <Card title="Printed Parts Reference" icon="list" href="/cad/printed-parts">
+    Detailed description of every part — its role, assembly region, and print recommendations.
+  </Card>
+  <Card title="3D Printing Guide" icon="printer" href="/3d-printing">
+    Recommended settings, materials, and tips for printing all 13 parts successfully.
+  </Card>
+</CardGroup>
+
+<Note>
+  All files are named with the `Master -` prefix matching the OnShape part studio naming convention.
+</Note>

@@ -1,0 +1,230 @@
+---
+title: "Controlling Robotic Arm Macondo from a Smartphone"
+sidebarTitle: "Smartphone Control"
+description: "Connect Robotic Arm Macondo to a smartphone app using Arduino UNO R4 WiFi's built-in WiFi and BLE, configure the control interface, and start operating the arm."
+---
+
+Robotic Arm Macondo is designed to be operated wirelessly from a smartphone. The Arduino UNO R4 WiFi variant includes a built-in ESP32-S3 co-processor that provides both 2.4 GHz WiFi and Bluetooth Low Energy (BLE) — no additional radio module or shield required. This means you can drive every servo joint directly from your phone, either through a browser-based web interface over your local network or through a paired BLE controller app, all running on standard Arduino libraries.
+
+## Connectivity Options
+
+The Arduino UNO R4 WiFi supports two distinct wireless approaches. Choose the one that best matches your control setup.
+
+<CardGroup cols={2}>
+  <Card title="WiFi (Web Server)" icon="wifi" href="/electronics">
+    Host a lightweight HTTP server on the Arduino. Any phone browser on the same network can connect — no app install required.
+  </Card>
+  <Card title="Bluetooth Low Energy (BLE)" icon="bluetooth" href="/electronics">
+    Pair directly with a BLE controller app. No network infrastructure needed — ideal for dedicated one-to-one control.
+  </Card>
+</CardGroup>
+
+### WiFi
+
+The Arduino UNO R4 WiFi contains an ESP32-S3 co-processor that handles 2.4 GHz 802.11 b/g/n WiFi. The `WiFiS3` library (included in the UNO R4 board package) exposes a standard Arduino `WiFiServer` API, letting the main RA4M1 microcontroller host a web server accessible from any phone browser on the same network — no app installation needed.
+
+**Best for:** Multi-user access, low-latency real-time control, integration with home automation platforms.
+
+### Bluetooth Low Energy (BLE)
+
+The same ESP32-S3 co-processor also handles Bluetooth 5.0 / BLE. The `ArduinoBLE` library wraps this hardware behind a simple GATT service/characteristic model. Pair Robotic Arm Macondo with any BLE-capable smartphone app (nRF Connect, LightBlue, or a custom app built with Flutter or React Native).
+
+**Best for:** Standalone paired control, no WiFi router required, simple dedicated remote.
+
+<Note>
+  The Arduino UNO R4 WiFi uses an ESP32-S3 co-processor for wireless connectivity. The board package handles all WiFi/BLE communication transparently through standard Arduino libraries — you write the same `WiFiS3` and `ArduinoBLE` API calls you would use on any compatible Arduino, and the co-processor firmware manages the radio layer automatically.
+</Note>
+
+## WiFi Web Server Approach
+
+The Arduino hosts a simple HTTP server on port 80. Any phone browser navigates to the Arduino's local IP address and sends HTTP GET requests carrying joint angle commands. The main loop reads each request, parses the target angle and joint identifier, and calls `servo.write()` to move that joint.
+
+```cpp Arduino WiFi web server sketch structure
+#include <WiFiS3.h>
+#include <Servo.h>
+
+const char* ssid     = "YOUR_SSID";
+const char* password = "YOUR_PASSWORD";
+
+// Define servos for each joint
+Servo baseServo;       // D2  — base rotation
+Servo shoulderServo;   // D3  — shoulder lift
+Servo elbowServo;      // D5  — elbow / 4-bar linkage
+Servo clawServo;       // D6  — claw open/close
+
+WiFiServer server(80);
+
+void setup() {
+  Serial.begin(115200);
+
+  // Attach servos to their shield pins
+  baseServo.attach(2);
+  shoulderServo.attach(3);
+  elbowServo.attach(5);
+  clawServo.attach(6);
+
+  // Move all joints to safe centre position on boot
+  baseServo.write(90);
+  shoulderServo.write(90);
+  elbowServo.write(90);
+  clawServo.write(90);
+
+  // Connect to WiFi
+  WiFi.begin(ssid, password);
+  while (WiFi.status() != WL_CONNECTED) {
+    delay(500);
+    Serial.print(".");
+  }
+  Serial.print("\nConnected. IP: ");
+  Serial.println(WiFi.localIP());
+
+  // Start web server on port 80
+  server.begin();
+}
+
+void loop() {
+  WiFiClient client = server.available();
+  if (!client) return;
+
+  String request = client.readStringUntil('\r');
+  client.flush();
+
+  // Parse joint angle commands from URL query string
+  // e.g. GET /?joint=base&angle=120
+  // Write parsed angle to the corresponding servo
+  // Send a minimal HTTP 200 response back to the browser
+}
+```
+
+<Note>
+  The sketch above is a structural example showing the correct library imports, servo attachment, WiFi initialisation flow, and server loop pattern. Full HTTP request parsing and a browser UI depend on your specific app design. See the Arduino `WiFiS3` library examples for complete web server implementations.
+</Note>
+
+## BLE Approach
+
+For standalone paired control without a WiFi router, use the `ArduinoBLE` library to expose each servo joint as a writable GATT characteristic. A BLE controller app on your phone reads and writes characteristic values to move individual joints.
+
+```cpp BLE servo controller sketch structure
+#include <ArduinoBLE.h>
+#include <Servo.h>
+
+// Define a custom GATT service for the arm
+BLEService armService("180D");  // Use a 16-bit UUID or a custom 128-bit UUID
+
+// One writable characteristic per joint (value = angle 0–180)
+BLEIntCharacteristic baseAngle    ("2A56", BLERead | BLEWrite);
+BLEIntCharacteristic shoulderAngle("2A57", BLERead | BLEWrite);
+BLEIntCharacteristic elbowAngle   ("2A58", BLERead | BLEWrite);
+BLEIntCharacteristic clawAngle    ("2A59", BLERead | BLEWrite);
+
+Servo baseServo, shoulderServo, elbowServo, clawServo;
+
+void setup() {
+  Serial.begin(115200);
+
+  baseServo.attach(2);
+  shoulderServo.attach(3);
+  elbowServo.attach(5);
+  clawServo.attach(6);
+
+  if (!BLE.begin()) {
+    Serial.println("BLE init failed");
+    while (1);
+  }
+
+  BLE.setLocalName("RoboticArmMacondo");
+  BLE.setAdvertisedService(armService);
+
+  // Add characteristics to the service
+  armService.addCharacteristic(baseAngle);
+  armService.addCharacteristic(shoulderAngle);
+  armService.addCharacteristic(elbowAngle);
+  armService.addCharacteristic(clawAngle);
+
+  BLE.addService(armService);
+
+  // Set safe default angle for each characteristic
+  baseAngle.writeValue(90);
+  shoulderAngle.writeValue(90);
+  elbowAngle.writeValue(90);
+  clawAngle.writeValue(90);
+
+  BLE.advertise();
+  Serial.println("BLE advertising as RoboticArmMacondo");
+}
+
+void loop() {
+  BLEDevice central = BLE.central();
+  if (central) {
+    while (central.connected()) {
+      if (baseAngle.written())
+        baseServo.write(baseAngle.value());
+      if (shoulderAngle.written())
+        shoulderServo.write(shoulderAngle.value());
+      if (elbowAngle.written())
+        elbowServo.write(elbowAngle.value());
+      if (clawAngle.written())
+        clawServo.write(clawAngle.value());
+    }
+  }
+}
+```
+
+Compatible BLE controller apps for testing and development:
+
+- **nRF Connect** (Nordic Semiconductor) — iOS & Android, full GATT browser
+- **LightBlue** (PunchThrough) — iOS & Android, easy characteristic read/write
+- **Custom app** — Build with Flutter (`flutter_blue_plus`), React Native (`react-native-ble-plx`), or Swift/Kotlin
+
+## Required Libraries
+
+| Library | Source | Purpose |
+|---------|--------|---------|
+| `WiFiS3` | Built into Arduino UNO R4 board package | WiFi connectivity for UNO R4 WiFi |
+| `ArduinoBLE` | Arduino Library Manager | BLE GATT server and client |
+| `Servo` | Built into Arduino IDE | PWM servo angle control |
+
+Install `ArduinoBLE` via **Sketch → Include Library → Manage Libraries**, search for "ArduinoBLE", and click Install. The `WiFiS3` and `Servo` libraries are available automatically once the UNO R4 board package is installed.
+
+## Setup Steps
+
+<Steps>
+  <Step title="Install the Arduino UNO R4 board package">
+    Open Arduino IDE. Go to **Tools → Board → Boards Manager**, search for **"UNO R4"**, and install the **Arduino UNO R4 Boards** package. This installs the `WiFiS3` library and all necessary toolchain components.
+  </Step>
+  <Step title="Install ArduinoBLE (BLE approach only)">
+    Go to **Sketch → Include Library → Manage Libraries**, search for **ArduinoBLE**, and click **Install**. Skip this step if you are using the WiFi web server approach.
+  </Step>
+  <Step title="Update your WiFi credentials">
+    In your sketch, replace `YOUR_SSID` and `YOUR_PASSWORD` with your local WiFi network name and passphrase. For BLE, no credentials are needed.
+  </Step>
+  <Step title="Upload the sketch">
+    Connect the Arduino UNO R4 WiFi to your computer via USB. Select **Tools → Board → Arduino UNO R4 WiFi** and the correct **Port**. Click **Upload** (→ arrow). Wait for "Done uploading."
+  </Step>
+  <Step title="Open Serial Monitor and confirm connection">
+    Open **Tools → Serial Monitor**, set baud rate to **115200**. For WiFi, you should see the assigned IP address printed within a few seconds. For BLE, you should see `BLE advertising as RoboticArmMacondo`.
+  </Step>
+  <Step title="Connect from your phone">
+    **WiFi:** Open your phone's browser, type the IP address shown in Serial Monitor (e.g. `http://192.168.1.42`), and your control interface should load.
+
+    **BLE:** Open nRF Connect or LightBlue, scan for `RoboticArmMacondo`, tap **Connect**, and you will see the arm service and its joint characteristics listed.
+  </Step>
+  <Step title="Test each servo joint individually">
+    Before running full motion sequences, command each joint to 45°, then 90°, then 135° one at a time. Confirm the joint moves smoothly and returns to centre before proceeding.
+  </Step>
+</Steps>
+
+## Servo Angle Ranges
+
+Standard hobby servo motors operate over a 0°–180° range, with 90° being the mechanical centre position. The `Servo.h` library translates these degree values into standard 50 Hz PWM pulses (1 ms = 0°, 1.5 ms = 90°, 2 ms = 180°).
+
+| Joint | Suggested Range | Notes |
+|-------|----------------|-------|
+| Base rotation | 0°–180° | Full rotational sweep |
+| Shoulder | 30°–150° | Avoid extreme positions under load |
+| Elbow (4-bar linkage) | 45°–135° | Mechanical stops limit travel |
+| Claw | 0°–90° | 0° = closed, 90° = fully open |
+
+<Tip>
+  Start with individual servo tests at center position (90°) before commanding full range of motion — this prevents mechanical damage if servo limits are exceeded. Each joint should reach its target smoothly; jerky motion or buzzing at the end of travel indicates the software limit exceeds the physical stop.
+</Tip>

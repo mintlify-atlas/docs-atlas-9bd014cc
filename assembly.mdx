@@ -1,0 +1,88 @@
+---
+title: "Assembling Robotic Arm Macondo Step by Step"
+sidebarTitle: "Assembly"
+description: "Full step-by-step assembly instructions for Robotic Arm Macondo, from mounting the base to attaching the claw and connecting all servo motors."
+---
+
+Assembling Robotic Arm Macondo is a methodical process that works from the ground up: you begin with the Base, build the shoulder joint, progress through the arm segments and 4-bar linkage, and finish with the claw mechanism and electronics connections. With all parts printed and hardware in hand, expect the full assembly to take **3–5 hours** for a first-time build. Having the OnShape CAD model open on a second screen throughout assembly is strongly recommended — it lets you verify part orientations and joint geometry at every step before committing fasteners.
+
+<Tip>
+  Reference the OnShape model at all times during assembly to verify part orientations. The model is available at: [https://cad.onshape.com/documents/c667b97a3a2d7a4859eb4271/w/a18409ec0f56e84081c11f96/e/3d0234714fafda30fd940069](https://cad.onshape.com/documents/c667b97a3a2d7a4859eb4271/w/a18409ec0f56e84081c11f96/e/3d0234714fafda30fd940069)
+</Tip>
+
+## Before You Begin
+
+Complete the following checklist before picking up a screwdriver. Starting assembly with missing parts or unfinished electronics is the most common cause of project delays.
+
+<Note>
+  **Pre-assembly checklist:**
+  - [ ] All 13 parts printed and support material fully removed and cleaned
+  - [ ] All bearing surfaces and pivot bores deburred and test-fit smooth
+  - [ ] All hardware from the BOM in hand (M3 screws, nuts, washers)
+  - [ ] Custom shield PCB assembled and voltage levels verified
+  - [ ] All 6 servo motors available with 3-pin cables attached
+  - [ ] OnShape model open for reference: [cad.onshape.com](https://cad.onshape.com/documents/c667b97a3a2d7a4859eb4271/w/a18409ec0f56e84081c11f96/e/3d0234714fafda30fd940069)
+  - [ ] 7.5V battery pack charged and ready
+</Note>
+
+## Assembly Steps
+
+<Steps>
+  <Step title="Mount the Base">
+    Place the **Base** part on your workbench or intended mounting surface. The Base has four M3 mounting holes — these match the `MountingHole_3.2mm_M3` footprint pattern from the KiCad shield schematic (H1–H4) and are designed to accept M3 socket head cap screws. If mounting the arm to a fixed surface (bench, platform, or enclosure lid), align and drill matching holes in the mounting surface, then secure the Base using M3 screws, washers, and nuts. If using the arm free-standing on a bench, you can skip surface mounting for initial testing. Confirm the Base is stable and flat before proceeding.
+  </Step>
+
+  <Step title="Install Left and Right Mounts">
+    Attach the **Left Mount** and **Right Mount** to the Base. These two parts form the shoulder pivot points that the Bearing Arm will rotate between. Insert M3 captive nuts into the hex pockets on each mount (a light press with pliers or a smooth bolt as a drift pin seats them fully), then thread M3 screws through the Base into the mount base flanges. Do not fully torque the fasteners yet — leave them slightly loose until both mounts are positioned. Once both are in place, verify they are parallel and equidistant by referencing the OnShape model, then tighten fully.
+  </Step>
+
+  <Step title="Attach the Bearing Arm">
+    Insert the **Bearing Arm** between the Left Mount and Right Mount pivot bores. This is the primary shoulder joint — the Bearing Arm must rotate smoothly with minimal play. Thread an M3 screw (with washer) through the Left Mount pivot bore, through the Bearing Arm, and into the Right Mount pivot bore, securing with a nut on the far side. The fastener should be snug enough to eliminate lateral slop but loose enough that the Bearing Arm swings freely by hand. Adjust until you achieve smooth, wobble-free rotation.
+  </Step>
+
+  <Step title="Install the Third Arm">
+    Connect the **Third Arm** to the upper end of the Bearing Arm. The Third Arm forms the first major arm segment and carries the bending loads during arm extension. Use M3 screws and nuts at the pivot joint. As with the shoulder, aim for snug-but-free rotation: the joint should feel firm with no wobble, but swing freely under its own weight when held horizontally. Route any cable management channels or zip-tie loops on the Third Arm before tightening the joint fastener.
+  </Step>
+
+  <Step title="Assemble the 4-Bar Linkage">
+    Attach the **Top 4 Bar Servo Arm** and the **Top Free Arm** to form the parallelogram linkage. In a 4-bar linkage, both links run parallel to each other and maintain a constant angular relationship — this keeps the claw level regardless of the arm's elevation angle. The Top 4 Bar Servo Arm attaches to the servo motor shaft at one end and to the Top Mount at the other; the Top Free Arm runs parallel to it, connecting at the same two pivot points on the opposite side. Install pivot fasteners through all four connection points and confirm the parallelogram moves smoothly without binding at any position throughout its full range of travel.
+  </Step>
+
+  <Step title="Install the Top Mount">
+    Fasten the **Top Mount** to the upper end of the 4-bar linkage assembly. The Top Mount serves as the structural termination of the arm and provides the attachment interface for the Claw Mount. Secure it with M3 screws through the linkage pivot bosses. Confirm the Top Mount is oriented correctly — the claw-facing mounting surface should be perpendicular to the arm's neutral axis when the linkage is at its midpoint position.
+  </Step>
+
+  <Step title="Attach the Servo Arm">
+    Press the **Servo Arm** onto the output shaft of the shoulder servo motor. The Servo Arm transfers rotational motion from the servo to the Bearing Arm. Before pressing it on, use the smartphone app (or Arduino IDE servo sweep sketch) to command the shoulder servo to its centre position (90°). With the servo at centre, orient the Servo Arm so the arm's neutral pose is achieved — typically with the arm pointing straight up or at the designed resting position shown in the OnShape model. Secure the Servo Arm with the servo's included horn screw.
+  </Step>
+
+  <Step title="Assemble the Claw">
+    Build the gripper mechanism by installing the **Spur Gear**, **Claw Gear Left**, **Claw Gear Right**, and **Claw Mount** as a sub-assembly. Start by pressing the Claw Gear Left and Claw Gear Right onto their respective pivot posts on the Claw Mount, verifying they mesh cleanly with each other. Then press the Spur Gear onto the claw servo motor shaft — this gear drives both claw gears simultaneously, causing the claw fingers to open or close symmetrically. With all three gears meshed, confirm the claw opens and closes smoothly through its full range by manually rotating the Spur Gear. Mount the completed claw sub-assembly to the Top Mount using M3 fasteners.
+  </Step>
+
+  <Step title="Install Servo Motors">
+    Mount each of the 6 servo motors at their respective joints. The servo pockets in each printed part are designed to accept standard hobby servo bodies — press each motor into its pocket and secure with M3 button head screws through the servo mounting ears into the printed part. Route servo cables neatly along the arm structure, using zip ties or the cable routing channels built into the printed parts to prevent cables from catching on moving joints. Leave enough slack at each joint to accommodate full range of motion without the cable being pulled taut.
+  </Step>
+
+  <Step title="Connect Electronics">
+    Seat the custom shield PCB onto the Arduino UNO R4 WiFi, then plug each servo's 3-pin connector into the corresponding `Conn_01x03` header on the shield following the pin assignment table in the [Electronics](/electronics) page. Connect the 7.5V battery pack to the +BATT input connector. Do not power on yet — proceed to the range-of-motion check first.
+  </Step>
+
+  <Step title="Test Range of Motion">
+    Before applying power, manually work every joint through its full intended range of motion by hand. Check for:
+    - **Binding** — any joint that resists movement at certain angles (usually caused by a fastener that is too tight on a pivot or a cable snagging)
+    - **Excessive play** — any joint that wobbles laterally (loosen, reposition, and re-tighten the pivot fastener)
+    - **Cable clearance** — no servo cable should be pinched or pulled taut at any joint position
+    - **Gear mesh** — the claw gear teeth should mesh cleanly with no skipping when manually cycled
+    
+    Resolve any issues found before powering on. Binding joints cause servo motor stall, which draws excessive current and can damage both the servo and the shield PCB.
+  </Step>
+</Steps>
+
+## Calibration
+
+After a successful manual range-of-motion check, power on the system and launch the smartphone app. Use the app's servo calibration interface to set the centre position (90°) for each servo motor. Centre calibration ensures that the arm rests at its designed neutral pose and that the full commanded range maps symmetrically to the actual mechanical range of each joint. Save the calibration values to the Arduino's EEPROM via the app so they persist across power cycles.
+
+<Note>
+  If a servo oscillates or hunts around its commanded position after calibration, the PWM trim value may need adjustment. Use the app's fine-trim controls to dial in a stable neutral position for each joint individually.
+</Note>
