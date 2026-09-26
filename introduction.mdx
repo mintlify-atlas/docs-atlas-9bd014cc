@@ -55,6 +55,30 @@ Before you start, gather the following:
 | Power supply | Battery → 7.5 V → 5 V / 3.3 V regulated rails |
 | CAD platform | OnShape (cloud-based, fully parametric) |
 
+## 3D-Printed Parts
+
+The arm is built from 13 unique printed parts, each serving a specific structural or mechanical role:
+
+<CardGroup cols={2}>
+  <Card title="Structural Chain" icon="link">
+    - **Base** — ground anchor and azimuth rotation
+    - **Left Mount** — left shoulder support bracket
+    - **Right Mount** — right shoulder support bracket
+    - **Bearing Arm** — lower arm segment (shoulder to elbow)
+    - **Third Arm** — mid-arm link (elbow to upper assembly)
+    - **Top Mount** — upper arm terminus that carries the claw
+  </Card>
+  <Card title="4-Bar Linkage & Claw" icon="gear">
+    - **Servo Arm** — 4-bar rocker/follower link
+    - **Top 4 Bar Servo Arm** — 4-bar driven crank link
+    - **Top Free Arm** — 4-bar coupler link
+    - **Spur Gear** — central drive gear for the claw
+    - **Claw Gear Left** — left finger drive gear
+    - **Claw Gear Right** — right finger drive gear
+    - **Claw Mount** — end-effector housing and gear axle carrier
+  </Card>
+</CardGroup>
+
 <Note>
   The complete OnShape CAD assembly — including all part geometry, constraints, and assembly mates — is publicly available at:
   [https://cad.onshape.com/documents/c667b97a3a2d7a4859eb4271/w/a18409ec0f56e84081c11f96/e/3d0234714fafda30fd940069](https://cad.onshape.com/documents/c667b97a3a2d7a4859eb4271/w/a18409ec0f56e84081c11f96/e/3d0234714fafda30fd940069)

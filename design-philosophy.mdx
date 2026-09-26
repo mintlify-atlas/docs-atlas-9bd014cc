@@ -1,7 +1,7 @@
 ---
 title: "Design Philosophy and Mechanical Architecture"
 sidebarTitle: "Design Philosophy"
-description: "Why Robotic Arm Macondo uses a 4-bar linkage mechanism and spur gear claw, and the engineering tradeoffs that shaped the design."
+description: "Why Robotic Arm Macondo uses a 4-bar linkage and spur gear claw, and the engineering tradeoffs that shaped every part of the design."
 ---
 
 Robotic Arm Macondo was designed around a deliberate engineering challenge: the project specifications called for an arm built with multiple 2-bar stages — a configuration that raises the mechanical complexity well above a simple single-pivot arm and makes it an exceptional learning platform. As the project README states directly, the design was chosen because "the specifications required to make an arm with this amount of 2-bars would make for a great challenge and learning opportunity." Every major mechanical decision — the 4-bar linkage at the top of the arm, the spur-gear claw, the layered structural mounts — flows from that founding principle: maximise the educational value of each subsystem while keeping the build achievable with a consumer FDM printer and off-the-shelf servo hardware.
@@ -37,14 +37,14 @@ The arm follows a kinematic chain of six distinct structural zones, each handled
 
 | Zone | Parts | Function |
 |---|---|---|
-| **Base** | Master - Base | Anchors the entire assembly to a surface; houses the rotation servo for full-arm azimuth sweep |
-| **Shoulder mounts** | Master - Left Mount, Master - Right Mount | Bilateral support brackets that carry the lower arm pivot bearings and keep the arm laterally constrained |
-| **Lower arm** | Master - Bearing Arm | The primary lower arm segment, spanning from the shoulder pivot down to the elbow joint; uses bearings to minimise friction under servo load |
-| **Elbow / mid arm** | Master - Third Arm | The intermediate link connecting the bearing arm to the upper 4-bar assembly |
-| **Upper arm (4-bar)** | Master - Top 4 Bar Servo Arm, Master - Top Free Arm, Master - Servo Arm, Master - Top Mount | The 4-bar linkage stage that controls upper-arm sweep and carries the claw subassembly |
-| **End-effector** | Master - Claw Mount, Master - Claw Gear Left, Master - Claw Gear Right, Master - Spur Gear | The spur-gear claw for gripping objects |
+| **Base** | Base | Anchors the entire assembly to a surface; houses the rotation servo for full-arm azimuth sweep |
+| **Shoulder mounts** | Left Mount, Right Mount | Bilateral support brackets that carry the lower arm pivot bearings and keep the arm laterally constrained |
+| **Lower arm** | Bearing Arm | The primary lower arm segment, spanning from the shoulder pivot down to the elbow joint; uses bearings to minimise friction under servo load |
+| **Elbow / mid arm** | Third Arm | The intermediate link connecting the bearing arm to the upper 4-bar assembly |
+| **Upper arm (4-bar)** | Top 4 Bar Servo Arm, Top Free Arm, Servo Arm, Top Mount | The 4-bar linkage stage that controls upper-arm sweep and carries the claw subassembly |
+| **End-effector** | Claw Mount, Claw Gear Left, Claw Gear Right, Spur Gear | The spur-gear claw for gripping objects |
 
-Reading the chain from ground to tip: the **Base** provides azimuth rotation → the **Left and Right Mounts** form a stable shoulder cradle → the **Bearing Arm** extends to the elbow → the **Third Arm** bridges to the upper assembly → the **4-bar upper arm** (Top Mount, Servo Arm, Top 4 Bar Servo Arm, Top Free Arm) sweeps the end-effector through its working arc → the **Claw Mount and gear set** performs the final grip action.
+Reading the chain from ground to tip: the **Base** provides azimuth rotation → the **Left Mount and Right Mount** form a stable shoulder cradle → the **Bearing Arm** extends to the elbow → the **Third Arm** bridges to the upper assembly → the **4-bar upper arm** (Top 4 Bar Servo Arm, Top Free Arm, Servo Arm, Top Mount) sweeps the end-effector through its working arc → the **Claw Mount** and gear set (Claw Gear Left, Claw Gear Right, Spur Gear) performs the final grip action.
 
 ## Electronics Integration
 

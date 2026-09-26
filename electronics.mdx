@@ -16,7 +16,7 @@ Gather the following items before beginning the electronics setup:
 
 - **Arduino UNO R4 WiFi** — WiFi variant is mandatory for smartphone app connectivity
 - **Custom shield PCB** — fabricated from the KiCad files in `KiCad Schematics/`, or assembled on protoboard following the schematic
-- **Servo motors** (×6) — one per arm joint; standard 3-pin hobby servo connector (PWM / + / −)
+- **Servo motors** — one per arm joint; standard 3-pin hobby servo connector (PWM / + / −). The KiCad shield schematic includes Motor_Servo symbols M1–M3; refer to `BOM.xlsx` for the confirmed total quantity.
 - **7.5V battery pack** — connects to the +BATT input on the shield
 - **Servo extension / jumper wires** — 3-pin servo connectors at 2.54 mm pitch
 - **Male pin headers** — 2.54 mm pitch, to match the Arduino UNO R4 shield footprint
@@ -34,14 +34,14 @@ The power system uses a layered distribution scheme that keeps high-current serv
        │
   Voltage Regulators
        ├──► +5V  ─── Servo motor power (all servo + pins)
-       └──► +3.3V ── Arduino logic / WiFi module
+       └──► +3V3  ── Arduino logic / WiFi module
 ```
 
 **Key points:**
 - The **+BATT** net carries raw battery voltage (7.5V) directly from the battery connector.
 - The **+VSW** net is the same voltage passed through a power switch, allowing the system to be safely de-energised without disconnecting the battery.
 - The **+5V** net is the regulated servo supply. All servo `+` pins connect here.
-- The **+3.3V** net powers the Arduino R4's logic and ESP32-S3 WiFi module.
+- The **+3V3** net powers the Arduino R4's logic and ESP32-S3 WiFi module.
 - **GND** is a shared common reference for all nets.
 
 Keeping servo power on its own +5V regulator is important: servo motors draw large instantaneous currents during movement, which create voltage spikes on shared power rails. Isolating them prevents brownouts that would otherwise reset the Arduino mid-operation.
@@ -56,21 +56,12 @@ Each servo motor has three wires on a standard 3-pin connector:
 | Pin 2 (usually red) | + power | +5V regulated rail |
 | Pin 3 (usually brown/black) | Ground | GND |
 
-The KiCad schematic (`uno-r4-shield-template.kicad_sch`) routes Arduino digital pins D2 through D13 to individual `Conn_01x03` (3-pin) servo connectors on the shield. This provides up to 12 servo channels — more than sufficient for the 6 joints on Robotic Arm Macondo.
+The KiCad schematic (`uno-r4-shield-template.kicad_sch`) routes Arduino digital pins across the shield headers labeled D0–D13, D18, and D19. Individual `Conn_01x03` (3-pin) servo connectors are provided on the shield for each joint. The schematic includes Motor_Servo symbols M1, M2, and M3 as wiring reference; the final per-joint pin assignments are defined in the firmware and should match however the connectors are physically wired to the digital header.
 
-### Servo-to-Pin Assignment
-
-| Servo # | Joint | Arduino Digital Pin |
-|---|---|---|
-| 1 | Base rotation | D2 |
-| 2 | Shoulder (Bearing Arm) | D3 |
-| 3 | Elbow (Third Arm) | D4 |
-| 4 | Wrist / Top linkage | D5 |
-| 5 | Claw open/close (Spur Gear) | D6 |
-| 6 | Claw rotation | D7 |
+### Servo Pin Wiring Notes
 
 <Note>
-  The pin assignments above are a recommended starting configuration. You can remap any servo to any digital pin D2–D13 by modifying the firmware. Analog pins A0/D14 through A5/D19 are available on the shield headers for sensors or additional actuators if your design expands.
+  The exact servo-to-pin assignments depend on how you wire the `Conn_01x03` headers to the digital pin header on the shield. A starting recommendation is to use consecutive digital pins from D2 upward (D2, D3, D4 … ) for each joint in order from base to claw, but you can remap any servo to any digital pin D2–D13 in the firmware. Analog pins A0/D14 through A5/D19 are also available on the shield headers for sensors or additional actuators.
 </Note>
 
 ## Shield PCB
@@ -80,7 +71,7 @@ The custom shield PCB was designed with KiCad 10 and is stored in the `KiCad Sch
 - Multiple `Conn_01x03` 3-pin servo headers routed to D2–D13
 - +BATT battery input connector
 - +VSW switched power net
-- +5V and +3.3V regulated power distribution
+- +5V and +3V3 regulated power distribution
 - GND plane
 - Four `MountingHole_3.2mm_M3` PCB mounting holes (H1–H4) that align with the Base part's mounting boss pattern
 
@@ -105,6 +96,6 @@ For full schematic reference and PCB layout details, see the [KiCad schematic pa
     Connect your 7.5V battery pack to the +BATT input connector on the shield. Do not power on yet — complete the next step first.
   </Step>
   <Step title="Verify voltage levels before powering on">
-    With the power switch in the OFF (+VSW disconnected) position, use a multimeter to confirm that the +5V regulator output reads 5.0V (±0.1V) and the +3.3V output reads 3.3V (±0.1V) before the Arduino and servos are connected. Only after confirming correct regulation should you seat the shield onto the Arduino and connect servo cables.
+    With the power switch in the OFF (+VSW disconnected) position, use a multimeter to confirm that the +5V regulator output reads 5.0V (±0.1V) and the +3V3 output reads 3.3V (±0.1V) before the Arduino and servos are connected. Only after confirming correct regulation should you seat the shield onto the Arduino and connect servo cables.
   </Step>
 </Steps>
